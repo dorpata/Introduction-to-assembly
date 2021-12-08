@@ -1,0 +1,66 @@
+#include <msp430xG46x.h>     ;define controlled include file
+;------------------------------------------------------------
+            MODULE   MaxOdd1
+            PUBLIC   maxOddfunc
+            RSEG     CODE
+ ;-----------------------------------------------------------
+maxOddfunc  POP    R15        ; adress
+            POP    R4         ; maxodd  
+            POP    R5         ; SIZE
+            POP    R6         ; Arr2
+            POP    R7         ; Arr1
+            MOV    #1,R10
+            CLRC
+            MOV    0(R5),R5
+L           DEC    R5
+            JZ     end1
+            MOV    0(R6),R11
+            AND    R10,0(R6)
+            JZ     test1              ; jump if R6 even
+            MOV    0(R7),R12
+            AND    R10,0(R7)
+            JZ     resultod           ; jump if R7 even
+            CMP    R11,R12
+            JC     resultr7
+            MOV    R11,0(R4)
+            INCD   R4
+            INCD   R6
+            INCD   R7
+            JMP    L      
+end1        PUSH   R15
+            RET
+            
+            
+test1       MOV    0(R7),R12
+            AND    R10,0(R7)
+            JZ     resultev
+            MOV    R12,0(R4)
+            INCD   R4
+            INCD   R6
+            INCD   R7
+            JMP    L
+            
+            
+resultev    MOV    #0,0(R4)
+            INCD   R4
+            INCD   R6
+            INCD   R7
+            JMP    L
+
+resultr7    MOV    R12,0(R4)
+            INCD   R4
+            INCD   R6
+            INCD   R7
+            JMP    L
+
+resultod    MOV    R11,0(R4)
+            INCD   R4
+            INCD   R6
+            INCD   R7
+            JMP    L      
+
+;-------------------------------------------------------------------------------
+            COMMON  INTVEC                  ; Interrupt Vectors
+;-------------------------------------------------------------------------------
+            ORG     RESET_VECTOR            ; POR, ext. Reset
+            END
